@@ -1,0 +1,247 @@
+@import "tailwindcss";
+
+@theme {
+  /* palette */
+  --color-ink: #0e1b2a; /* primary dark text + dark surfaces */
+  --color-night: #0a141f; /* darkest surface (footer) */
+  --color-slate: #5c6b7a; /* muted body text */
+
+  --color-mint: #17c98d; /* primary brand / interactive fill */
+  --color-mint-600: #0e9d6e; /* deeper mint for text/hover on light */
+  --color-mint-050: #e7faf3; /* mint tint background */
+  --color-peak: #1fe0a0; /* bright logo mint (glyph, glows) */
+
+  --color-cream: #f5f8f6; /* alternating section background */
+  --color-line: #e5ebe8; /* hairline borders on light */
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-space), var(--font-inter), ui-sans-serif, sans-serif;
+
+  --shadow-soft: 0 1px 2px rgba(14, 27, 42, 0.04),
+    0 12px 32px -12px rgba(14, 27, 42, 0.12);
+  --shadow-lift: 0 24px 60px -28px rgba(14, 27, 42, 0.28);
+  --shadow-mint: 0 16px 40px -16px rgba(23, 201, 141, 0.5);
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5.5rem;
+}
+
+body {
+  background: #ffffff;
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+@keyframes float-up {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.reveal {
+  animation: float-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.reveal-1 { animation-delay: 0.05s; }
+.reveal-2 { animation-delay: 0.13s; }
+.reveal-3 { animation-delay: 0.21s; }
+.reveal-4 { animation-delay: 0.29s; }
+
+/* Hero */
+:root {
+  /* shared easing for the hero animations */
+  --ease-premium: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* each headline line rises out from behind a clip mask */
+.hero-line-mask {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.12em;
+}
+.hero-line {
+  display: block;
+  animation: hero-line-in 1s var(--ease-premium) both;
+}
+@keyframes hero-line-in {
+  from {
+    opacity: 0;
+    transform: translateY(110%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* underline draws itself in under "pest-free" */
+@keyframes hero-underline-draw {
+  from {
+    stroke-dashoffset: 320;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+.hero-underline path {
+  stroke-dasharray: 320;
+  animation: hero-underline-draw 0.9s ease-out both;
+  animation-delay: 1s;
+}
+
+/* sheen sweep across the CTA on hover */
+.hero-cta {
+  position: relative;
+  overflow: hidden;
+}
+.hero-cta::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  transform: translateX(-120%) skewX(-20deg);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.45),
+    transparent
+  );
+}
+.hero-cta:hover::after {
+  transition: transform 0.7s var(--ease-premium);
+  transform: translateX(120%) skewX(-20deg);
+}
+
+/* vignette, darkens the edges */
+.hero-vignette {
+  background: radial-gradient(
+    120% 80% at 50% 40%,
+    transparent 45%,
+    rgba(10, 20, 31, 0.55) 100%
+  );
+}
+
+/* subtle film grain */
+.hero-grain {
+  opacity: 0.06;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* review card fades/slides in when the quote changes */
+@keyframes hero-review-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.hero-review-in {
+  animation: hero-review-in 0.6s var(--ease-premium) both;
+}
+
+/* pest ticker */
+@keyframes hero-ticker {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.hero-ticker {
+  animation: hero-ticker 90s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-line {
+    animation: none;
+  }
+  .hero-underline path {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+  .hero-ticker {
+    animation: none;
+  }
+  .hero-review-in {
+    animation: none;
+  }
+}
+
+/* scroll reveal, toggled by ScrollAnimator */
+.js-reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 0.8s var(--ease-premium),
+    transform 0.8s var(--ease-premium);
+  will-change: opacity, transform;
+}
+.js-reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* staggered version, ScrollAnimator sets each child's delay */
+.js-stagger > * {
+  opacity: 0;
+  transform: translateY(30px);
+  transition:
+    opacity 0.7s var(--ease-premium),
+    transform 0.7s var(--ease-premium);
+  will-change: opacity, transform;
+}
+.js-stagger.is-visible > * {
+  opacity: 1;
+  transform: none;
+}
+
+/* quote form steps fade/slide in */
+@keyframes form-step-in {
+  from {
+    opacity: 0;
+    transform: translateX(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+.form-step {
+  animation: form-step-in 0.45s var(--ease-premium) both;
+}
+
+/* review marquee */
+@keyframes review-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.review-marquee {
+  display: flex;
+  width: max-content;
+  animation: review-marquee 180s linear infinite;
+}
+.review-marquee:hover {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal { animation: none; }
+  .js-reveal { opacity: 1; transform: none; transition: none; }
+  .js-stagger > * { opacity: 1; transform: none; transition: none; }
+  .form-step { animation: none; }
+  .review-marquee { animation: none; }
+  html { scroll-behavior: auto; }
+}
