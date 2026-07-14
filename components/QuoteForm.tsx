@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo, useRef, useState } from "react";
-import { upload } from "@vercel/blob/client";
 import { site, services, serviceAreas } from "@/lib/site";
 import { Check, Arrow, ServiceIcon } from "@/components/Icons";
 import AddressAutocomplete from "@/components/AddressAutocomplete";
@@ -86,6 +85,9 @@ export default function QuoteForm({ initial }: { initial?: QuotePrefill }) {
     const photoUrls: string[] = [];
     const photoErrors: string[] = [];
     if (photos.length) {
+      // load the Blob client only when there's actually a photo to send, so it
+      // stays out of the initial bundle on every page
+      const { upload } = await import("@vercel/blob/client");
       const results = await Promise.allSettled(
         photos.map((p) =>
           upload(p.file.name, p.file, {
