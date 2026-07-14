@@ -12,9 +12,7 @@ import { Arrow, Check, Shield, Leaf } from "@/components/Icons";
 import { site, serviceAreas } from "@/lib/site";
 import { heroImages } from "@/lib/heroImages";
 
-// temp: using the hero clip until the owner-story video is shot.
-// swap to /videos/owner-story.mp4 when it's ready.
-const OWNER_VIDEO_SRC = "/videos/hero.mp4";
+const OWNER_VIDEO_SRC = "/videos/owner-aspen.mp4";
 
 export const metadata: Metadata = {
   title: "About Us | Local Pest Control in Reno & Sparks",
@@ -71,8 +69,8 @@ export default function AboutPage() {
         <div className="js-reveal mx-auto mt-12 max-w-5xl px-5 sm:px-8">
           <OwnerVideo
             src={OWNER_VIDEO_SRC}
-            poster="/videos/hero-poster.jpg"
-            posterAlt="The Peak Pest Control fleet lined up and ready"
+            poster="/videos/owner-poster.jpg"
+            posterAlt="Aspen from Peak Pest Control sharing the company's story"
             label="Meet the owner"
           />
         </div>
