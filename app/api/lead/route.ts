@@ -35,13 +35,19 @@ export async function POST(req: Request) {
   }
 
   const webhook = process.env.GHL_WEBHOOK_URL;
+  const photoUrls = (body.photoUrls ?? []).filter(Boolean);
+  console.log(
+    `lead: webhook=${webhook ? "set" : "MISSING"} photos=${photoUrls.length}`,
+    photoUrls,
+  );
+
   if (!webhook) {
+    console.error("lead: GHL_WEBHOOK_URL not set — client falls back to email");
     return NextResponse.json({ ok: false, fallback: true });
   }
 
   const name = (body.name ?? "").trim();
   const [firstName, ...rest] = name.split(/\s+/);
-  const photoUrls = (body.photoUrls ?? []).filter(Boolean);
 
   // fold the photo links into the message so they show up in the existing CRM
   // note without any extra GoHighLevel setup
@@ -76,9 +82,11 @@ export async function POST(req: Request) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     });
+    console.log(`lead: GHL webhook responded ${res.status}`);
     if (!res.ok) return NextResponse.json({ ok: false, fallback: true });
     return NextResponse.json({ ok: true });
-  } catch {
+  } catch (err) {
+    console.error("lead: GHL webhook fetch failed:", (err as Error).message);
     return NextResponse.json({ ok: false, fallback: true });
   }
 }
