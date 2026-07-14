@@ -19,6 +19,7 @@ export default function QuoteForm({ initial }: { initial?: QuotePrefill }) {
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [dragging, setDragging] = useState(false);
   const [sent, setSent] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   function addFiles(files: FileList | null) {
@@ -64,24 +65,58 @@ export default function QuoteForm({ initial }: { initial?: QuotePrefill }) {
     goToStep(2);
   }
 
-  function handleContactSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleContactSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    // grab the values before any await, the event target goes stale after
     const data = new FormData(e.currentTarget);
-    const body = [
-      `Name: ${data.get("name")}`,
-      `Phone: ${data.get("phone")}`,
-      `Email: ${data.get("email")}`,
-      `Address: ${data.get("address")}`,
-      `ZIP: ${zip}${matchedCity ? ` (${matchedCity})` : ""}`,
-      `Service: ${service || "Not specified"}`,
-      `Photos: ${photos.length ? `${photos.length} attached by customer` : "none"}`,
-      `Message: ${data.get("message") || ""}`,
-    ].join("\n");
-    // no CRM yet, just open their mail client
-    window.location.href = `mailto:${site.email}?subject=${encodeURIComponent(
-      "Free estimate request",
-    )}&body=${encodeURIComponent(body)}`;
+    const lead = {
+      name: String(data.get("name") ?? ""),
+      phone: String(data.get("phone") ?? ""),
+      email: String(data.get("email") ?? ""),
+      address: String(data.get("address") ?? ""),
+      zip,
+      city: matchedCity ?? "",
+      service: service || "",
+      message: String(data.get("message") ?? ""),
+      photoCount: photos.length,
+      company: String(data.get("company") ?? ""), // honeypot
+    };
+
+    setSubmitting(true);
+
+    // hand the lead to the CRM; if that's not wired up (or fails) fall back to
+    // an email draft so nothing is ever lost
+    let delivered = false;
+    try {
+      const res = await fetch("/api/lead", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(lead),
+      });
+      const json = (await res.json().catch(() => ({}))) as { ok?: boolean };
+      delivered = res.ok && json.ok === true;
+    } catch {
+      delivered = false;
+    }
+
+    if (!delivered) {
+      const body = [
+        `Name: ${lead.name}`,
+        `Phone: ${lead.phone}`,
+        `Email: ${lead.email}`,
+        `Address: ${lead.address}`,
+        `ZIP: ${zip}${matchedCity ? ` (${matchedCity})` : ""}`,
+        `Service: ${service || "Not specified"}`,
+        `Photos: ${photos.length ? `${photos.length} attached by customer` : "none"}`,
+        `Message: ${lead.message}`,
+      ].join("\n");
+      window.location.href = `mailto:${site.email}?subject=${encodeURIComponent(
+        "Free estimate request",
+      )}&body=${encodeURIComponent(body)}`;
+    }
+
     photos.forEach((p) => URL.revokeObjectURL(p.url));
+    setSubmitting(false);
     setSent(true);
   }
 
@@ -92,15 +127,15 @@ export default function QuoteForm({ initial }: { initial?: QuotePrefill }) {
           <Check className="h-8 w-8 text-mint-600" />
         </div>
         <h3 className="mt-6 font-display text-2xl font-bold text-ink">
-          Request started!
+          Request received!
         </h3>
         <p className="mt-3 max-w-sm text-slate">
-          Your email is ready to send. If it didn&rsquo;t open, call us directly
-          at{" "}
+          We&rsquo;ve got your details and someone from Peak will reach out
+          shortly about your free estimate. Need us sooner? Call{" "}
           <a href={site.phoneHref} className="font-bold text-mint-600">
             {site.phone}
-          </a>{" "}
-          and we&rsquo;ll take care of you.
+          </a>
+          .
         </p>
       </div>
     );
@@ -245,6 +280,15 @@ export default function QuoteForm({ initial }: { initial?: QuotePrefill }) {
       {/* Step 3, Contact */}
       {step === 2 && (
         <form key="contact" onSubmit={handleContactSubmit} className="form-step space-y-4">
+          {/* honeypot: hidden from people, bots fill it and get dropped */}
+          <input
+            type="text"
+            name="company"
+            tabIndex={-1}
+            autoComplete="off"
+            aria-hidden
+            className="hidden"
+          />
           <div>
             <h3 className="font-display text-xl font-bold text-ink">
               Where should we send your quote?
@@ -378,10 +422,13 @@ export default function QuoteForm({ initial }: { initial?: QuotePrefill }) {
 
           <button
             type="submit"
-            className="group inline-flex w-full items-center justify-center gap-2 rounded-full bg-mint px-7 py-4 text-base font-bold text-ink shadow-mint transition hover:bg-mint-600 hover:text-white"
+            disabled={submitting}
+            className="group inline-flex w-full items-center justify-center gap-2 rounded-full bg-mint px-7 py-4 text-base font-bold text-ink shadow-mint transition hover:bg-mint-600 hover:text-white disabled:cursor-not-allowed disabled:opacity-70"
           >
-            Get My Free Estimate
-            <Arrow className="h-5 w-5 transition group-hover:translate-x-1" />
+            {submitting ? "Sending…" : "Get My Free Estimate"}
+            {!submitting && (
+              <Arrow className="h-5 w-5 transition group-hover:translate-x-1" />
+            )}
           </button>
           <p className="text-center text-xs leading-relaxed text-slate">
             By submitting, you agree to our{" "}
