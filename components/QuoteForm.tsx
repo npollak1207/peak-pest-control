@@ -84,6 +84,7 @@ export default function QuoteForm({ initial }: { initial?: QuotePrefill }) {
     // upload any photos straight to Blob storage first. if the store isn't set
     // up (or a file fails) we just carry on without those links.
     const photoUrls: string[] = [];
+    const photoErrors: string[] = [];
     if (photos.length) {
       const results = await Promise.allSettled(
         photos.map((p) =>
@@ -95,6 +96,10 @@ export default function QuoteForm({ initial }: { initial?: QuotePrefill }) {
       );
       for (const r of results) {
         if (r.status === "fulfilled") photoUrls.push(r.value.url);
+        else
+          photoErrors.push(
+            r.reason instanceof Error ? r.reason.message : String(r.reason),
+          );
       }
     }
 
@@ -104,6 +109,7 @@ export default function QuoteForm({ initial }: { initial?: QuotePrefill }) {
       city: matchedCity ?? "",
       service: service || "",
       photoUrls,
+      photoError: photoErrors.join(" | "),
     };
 
     // hand the lead to the CRM; if that's not wired up (or fails) fall back to

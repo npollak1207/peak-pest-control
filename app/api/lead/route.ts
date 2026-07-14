@@ -18,6 +18,7 @@ type LeadBody = {
   service?: string;
   message?: string;
   photoUrls?: string[]; // already uploaded to Blob by the browser
+  photoError?: string; // client-side upload error, for debugging only
   company?: string; // honeypot — real people leave this blank
 };
 
@@ -39,6 +40,7 @@ export async function POST(req: Request) {
   console.log(
     `lead: webhook=${webhook ? "set" : "MISSING"} photos=${photoUrls.length}`,
     photoUrls,
+    body.photoError ? `photoError=${body.photoError}` : "",
   );
 
   if (!webhook) {
