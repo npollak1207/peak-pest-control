@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useRef, useState } from "react";
+import { upload } from "@vercel/blob/client";
 import { site, services, serviceAreas } from "@/lib/site";
 import { Check, Arrow, ServiceIcon } from "@/components/Icons";
 import AddressAutocomplete from "@/components/AddressAutocomplete";
@@ -69,20 +70,41 @@ export default function QuoteForm({ initial }: { initial?: QuotePrefill }) {
     e.preventDefault();
     // grab the values before any await, the event target goes stale after
     const data = new FormData(e.currentTarget);
-    const lead = {
+    const contact = {
       name: String(data.get("name") ?? ""),
       phone: String(data.get("phone") ?? ""),
       email: String(data.get("email") ?? ""),
       address: String(data.get("address") ?? ""),
-      zip,
-      city: matchedCity ?? "",
-      service: service || "",
       message: String(data.get("message") ?? ""),
-      photoCount: photos.length,
       company: String(data.get("company") ?? ""), // honeypot
     };
 
     setSubmitting(true);
+
+    // upload any photos straight to Blob storage first. if the store isn't set
+    // up (or a file fails) we just carry on without those links.
+    const photoUrls: string[] = [];
+    if (photos.length) {
+      const results = await Promise.allSettled(
+        photos.map((p) =>
+          upload(p.file.name, p.file, {
+            access: "public",
+            handleUploadUrl: "/api/blob/upload",
+          }),
+        ),
+      );
+      for (const r of results) {
+        if (r.status === "fulfilled") photoUrls.push(r.value.url);
+      }
+    }
+
+    const lead = {
+      ...contact,
+      zip,
+      city: matchedCity ?? "",
+      service: service || "",
+      photoUrls,
+    };
 
     // hand the lead to the CRM; if that's not wired up (or fails) fall back to
     // an email draft so nothing is ever lost
@@ -107,9 +129,11 @@ export default function QuoteForm({ initial }: { initial?: QuotePrefill }) {
         `Address: ${lead.address}`,
         `ZIP: ${zip}${matchedCity ? ` (${matchedCity})` : ""}`,
         `Service: ${service || "Not specified"}`,
-        `Photos: ${photos.length ? `${photos.length} attached by customer` : "none"}`,
         `Message: ${lead.message}`,
-      ].join("\n");
+        photoUrls.length ? `Photos:\n${photoUrls.map((u) => `- ${u}`).join("\n")}` : "",
+      ]
+        .filter(Boolean)
+        .join("\n");
       window.location.href = `mailto:${site.email}?subject=${encodeURIComponent(
         "Free estimate request",
       )}&body=${encodeURIComponent(body)}`;

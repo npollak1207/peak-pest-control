@@ -17,7 +17,7 @@ type LeadBody = {
   city?: string;
   service?: string;
   message?: string;
-  photoCount?: number;
+  photoUrls?: string[]; // already uploaded to Blob by the browser
   company?: string; // honeypot — real people leave this blank
 };
 
@@ -41,6 +41,15 @@ export async function POST(req: Request) {
 
   const name = (body.name ?? "").trim();
   const [firstName, ...rest] = name.split(/\s+/);
+  const photoUrls = (body.photoUrls ?? []).filter(Boolean);
+
+  // fold the photo links into the message so they show up in the existing CRM
+  // note without any extra GoHighLevel setup
+  let message = body.message ?? "";
+  if (photoUrls.length) {
+    const list = photoUrls.map((u) => `- ${u}`).join("\n");
+    message = `${message ? `${message}\n\n` : ""}Photos attached:\n${list}`;
+  }
 
   // keys named to line up with GoHighLevel's standard contact fields so the
   // workflow mapping is one-to-one
@@ -56,8 +65,8 @@ export async function POST(req: Request) {
     postalCode: body.zip ?? "",
     source: "Website estimate form",
     service: body.service ?? "",
-    message: body.message ?? "",
-    photos: body.photoCount ?? 0,
+    message,
+    photos: photoUrls.join("\n"),
     tags: ["website-lead"],
   };
 
