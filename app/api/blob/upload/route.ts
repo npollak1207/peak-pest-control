@@ -11,6 +11,11 @@ export const runtime = "nodejs";
 export async function POST(req: Request) {
   const body = (await req.json()) as HandleUploadBody;
   try {
+    if (!process.env.BLOB_READ_WRITE_TOKEN) {
+      console.error(
+        "blob upload: BLOB_READ_WRITE_TOKEN missing — connect the Blob store to this project and redeploy",
+      );
+    }
     const result = await handleUpload({
       body,
       request: req,
@@ -32,6 +37,7 @@ export async function POST(req: Request) {
     });
     return NextResponse.json(result);
   } catch (err) {
+    console.error("blob upload failed:", (err as Error).message);
     return NextResponse.json(
       { error: (err as Error).message },
       { status: 400 },
