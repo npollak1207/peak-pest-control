@@ -123,6 +123,58 @@ export function faqSchema(items: { q: string; a: string }[] = faqs) {
   };
 }
 
+// a single blog post (BlogPosting), authored by the blog byline and published
+// by the canonical business node.
+export function blogPostSchema(post: {
+  slug: string;
+  title: string;
+  description: string;
+  image: string;
+  imageAlt?: string;
+  date: string;
+  category: string;
+  keywords?: string[];
+  authorName: string;
+}) {
+  const url = abs(`/blog/${post.slug}`);
+  return {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "@id": `${url}#post`,
+    headline: post.title,
+    description: post.description,
+    image: abs(post.image),
+    datePublished: post.date,
+    dateModified: post.date,
+    author: { "@type": "Person", name: post.authorName },
+    publisher: { "@id": BUSINESS_ID },
+    mainEntityOfPage: { "@type": "WebPage", "@id": url },
+    url,
+    articleSection: post.category,
+    inLanguage: "en-US",
+    ...(post.keywords?.length ? { keywords: post.keywords.join(", ") } : {}),
+  };
+}
+
+// the blog index as a Blog node listing its posts
+export function blogSchema(items: { slug: string; title: string; date: string }[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    "@id": `${site.url}/blog#blog`,
+    name: `${site.name} Blog`,
+    url: abs("/blog"),
+    publisher: { "@id": BUSINESS_ID },
+    inLanguage: "en-US",
+    blogPost: items.map((p) => ({
+      "@type": "BlogPosting",
+      headline: p.title,
+      url: abs(`/blog/${p.slug}`),
+      datePublished: p.date,
+    })),
+  };
+}
+
 // one service/pest offering, linked back to the business by @id
 export function serviceSchema({
   name,

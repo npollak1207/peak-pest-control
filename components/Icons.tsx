@@ -84,6 +84,34 @@ export const Star = ({ className }: IconProps) => (
   </svg>
 );
 
+export const User = ({ className }: IconProps) => (
+  <svg {...base} className={className} aria-hidden>
+    <circle cx="12" cy="8" r="3.5" />
+    <path d="M5 20c0-3.6 3.1-6 7-6s7 2.4 7 6" />
+  </svg>
+);
+
+export const Calendar = ({ className }: IconProps) => (
+  <svg {...base} className={className} aria-hidden>
+    <rect x="4" y="5.5" width="16" height="15" rx="2" />
+    <path d="M4 10h16M8 3.5v4M16 3.5v4" />
+  </svg>
+);
+
+export const Mail = ({ className }: IconProps) => (
+  <svg {...base} className={className} aria-hidden>
+    <rect x="3" y="5" width="18" height="14" rx="2" />
+    <path d="m4 7 8 6 8-6" />
+  </svg>
+);
+
+export const Tag = ({ className }: IconProps) => (
+  <svg {...base} className={className} aria-hidden>
+    <path d="M4 4h7l9 9-7 7-9-9z" />
+    <circle cx="8.5" cy="8.5" r="1.4" />
+  </svg>
+);
+
 // Service & pest glyphs
 const glyphs: Record<string, ReactNode> = {
   home: <path d="M4 11l8-6 8 6M6 10v9h12v-9" />,
