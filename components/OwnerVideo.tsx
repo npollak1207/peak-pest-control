@@ -5,9 +5,12 @@ import Image from "next/image";
 
 // Click-to-play video: poster + play button, the <video> only mounts on
 // click. When no poster is given, a branded gradient stands in. An empty src
-// shows the "coming soon" label instead of a playable button.
+// shows the "coming soon" label instead of a playable button. When webmSrc is
+// given it's offered first: capable browsers pull the smaller WebM and Safari
+// falls back to the MP4.
 export default function OwnerVideo({
   src,
+  webmSrc,
   poster,
   posterAlt,
   label = "Meet the owner",
@@ -15,6 +18,7 @@ export default function OwnerVideo({
   playLabel = "Play the owner's video",
 }: {
   src?: string;
+  webmSrc?: string;
   poster?: string;
   posterAlt?: string;
   label?: string;
@@ -28,12 +32,14 @@ export default function OwnerVideo({
     <div className="relative aspect-video overflow-hidden rounded-[28px] border border-line bg-ink shadow-lift">
       {playing && hasVideo ? (
         <video
-          src={src}
           controls
           autoPlay
           playsInline
           className="h-full w-full bg-ink object-cover"
-        />
+        >
+          {webmSrc ? <source src={webmSrc} type="video/webm" /> : null}
+          <source src={src} type="video/mp4" />
+        </video>
       ) : (
         <>
           {poster ? (

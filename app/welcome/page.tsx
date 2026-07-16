@@ -42,6 +42,7 @@ export default function WelcomePage() {
       <div className="mx-auto mt-12 max-w-4xl px-5 sm:px-8">
         <OwnerVideo
           src={WELCOME_VIDEO_SRC}
+          webmSrc="/videos/owner-aspen.webm"
           poster="/videos/owner-poster.jpg"
           posterAlt="Aspen from Peak Pest Control"
           label="Welcome to Peak"

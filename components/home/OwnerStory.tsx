@@ -21,6 +21,7 @@ export default function OwnerStory() {
       <div className="js-reveal mx-auto mt-12 max-w-4xl px-5 sm:px-8">
         <OwnerVideo
           src={OWNER_VIDEO_SRC}
+          webmSrc="/videos/owner-aspen.webm"
           poster="/videos/owner-poster.jpg"
           posterAlt="Aspen from Peak Pest Control sharing the company's story"
           label="Meet the owner"
