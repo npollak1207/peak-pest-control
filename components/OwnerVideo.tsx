@@ -3,18 +3,23 @@
 import { useState } from "react";
 import Image from "next/image";
 
-// Click-to-play owner video: poster + play button, the <video> only mounts
-// on click. Empty src shows a "coming soon" poster instead.
+// Click-to-play video: poster + play button, the <video> only mounts on
+// click. When no poster is given, a branded gradient stands in. An empty src
+// shows the "coming soon" label instead of a playable button.
 export default function OwnerVideo({
   src,
   poster,
   posterAlt,
   label = "Meet the owner",
+  comingSoonLabel = "Owner video coming soon",
+  playLabel = "Play the owner's video",
 }: {
   src?: string;
-  poster: string;
-  posterAlt: string;
+  poster?: string;
+  posterAlt?: string;
   label?: string;
+  comingSoonLabel?: string;
+  playLabel?: string;
 }) {
   const [playing, setPlaying] = useState(false);
   const hasVideo = Boolean(src);
@@ -31,13 +36,17 @@ export default function OwnerVideo({
         />
       ) : (
         <>
-          <Image
-            src={poster}
-            alt={posterAlt}
-            fill
-            sizes="(max-width: 1024px) 100vw, 1024px"
-            className="object-cover"
-          />
+          {poster ? (
+            <Image
+              src={poster}
+              alt={posterAlt ?? ""}
+              fill
+              sizes="(max-width: 1024px) 100vw, 1024px"
+              className="object-cover"
+            />
+          ) : (
+            <div className="absolute inset-0 bg-gradient-to-br from-night via-ink to-night" />
+          )}
           <div className="absolute inset-0 bg-gradient-to-t from-ink/70 via-ink/20 to-transparent" />
 
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
@@ -45,7 +54,7 @@ export default function OwnerVideo({
               type="button"
               onClick={() => hasVideo && setPlaying(true)}
               disabled={!hasVideo}
-              aria-label={hasVideo ? "Play the owner's video" : "Owner video coming soon"}
+              aria-label={hasVideo ? playLabel : comingSoonLabel}
               className="flex h-20 w-20 items-center justify-center rounded-full bg-white/95 shadow-lift transition hover:scale-105 hover:bg-white disabled:cursor-default disabled:hover:scale-100"
             >
               <svg
@@ -60,7 +69,7 @@ export default function OwnerVideo({
           </div>
 
           <span className="absolute bottom-4 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-ink/75 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-white backdrop-blur">
-            {hasVideo ? label : "Owner video coming soon"}
+            {hasVideo ? label : comingSoonLabel}
           </span>
         </>
       )}
