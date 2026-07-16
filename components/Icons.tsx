@@ -3,9 +3,8 @@ import type { ReactNode } from "react";
 type IconProps = { className?: string };
 
 const base = {
-  // Intrinsic size so the icon can't balloon when CSS is stripped
-  // (e.g. Microsoft Clarity heatmap replay). Tailwind h-*/w-* classes
-  // still override these on the live site.
+  // fixed size so the icons don't blow up when the css gets stripped out;
+  // the tailwind h-*/w-* classes still win on the live site
   width: 24,
   height: 24,
   fill: "none",
