@@ -1,7 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import { areas, nav, services, site } from "@/lib/site";
-import { Phone } from "./Icons";
+import { Phone, Instagram, Facebook, Google } from "./Icons";
+
+const socialLinks = [
+  { label: "Instagram", href: site.social.instagram, Icon: Instagram },
+  { label: "Facebook", href: site.social.facebook, Icon: Facebook },
+  { label: "Google reviews", href: site.googleReviewUrl, Icon: Google },
+];
 
 export default function Footer() {
   return (
@@ -29,6 +35,20 @@ export default function Footer() {
               <Phone className="h-5 w-5 text-mint" />
               {site.phone}
             </a>
+            <div className="mt-6 flex items-center gap-3">
+              {socialLinks.map(({ label, href, Icon }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={label}
+                  className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 text-white/70 transition hover:border-mint hover:text-mint"
+                >
+                  <Icon className="h-5 w-5" />
+                </a>
+              ))}
+            </div>
           </div>
 
           <div>

@@ -24,10 +24,18 @@ export const site = {
   // Fallback Google rating, shown when the live Places API fetch is unavailable
   // (no API key, network error). Keep it roughly in sync with Google.
   rating: { value: "4.8", count: 696 },
+  // Public social & review profiles, linked from the footer.
+  social: {
+    instagram: "https://www.instagram.com/peakpestreno/",
+    facebook: "https://www.facebook.com/peakpestreno",
+  },
   // Profiles that prove this is the same business (helps Google connect the
-  // site to your Google Business Profile). Add Facebook/Instagram/Yelp/BBB
-  // URLs here as they go live.
-  sameAs: ["https://share.google/ur2X7vlYxxE7uvPwi"],
+  // site to your Google Business Profile). Add Yelp/BBB URLs here as they go live.
+  sameAs: [
+    "https://share.google/ur2X7vlYxxE7uvPwi",
+    "https://www.instagram.com/peakpestreno/",
+    "https://www.facebook.com/peakpestreno",
+  ],
   // Paste the token from Google Search Console (URL-prefix property) here to
   // verify ownership, e.g. "abc123...". Leave blank until you have it.
   googleSiteVerification: "",

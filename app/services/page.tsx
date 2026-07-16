@@ -29,8 +29,8 @@ export const metadata: Metadata = {
 const propertyTypes = [
   {
     title: "Residential Pest Control",
-    image: "/images/residential-service.jpg",
-    alt: "Peak Pest Control technician servicing a Reno-area home",
+    image: "/images/residential-spray.jpg",
+    alt: "Peak Pest Control technician refilling a FlowZone sprayer for a residential visit",
     desc: "Year-round protection that keeps your home a no-fly, no-crawl zone, with EPA-registered products applied right where pests travel.",
     points: [
       "Interior, exterior & perimeter treatment",

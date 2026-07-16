@@ -7,6 +7,7 @@ import Process from "@/components/home/Process";
 import Plans from "@/components/home/Plans";
 import Guarantee from "@/components/home/Guarantee";
 import LocalAbout from "@/components/home/LocalAbout";
+import OwnerStory from "@/components/home/OwnerStory";
 import Reviews from "@/components/home/Reviews";
 import Areas from "@/components/home/Areas";
 import FAQ from "@/components/home/FAQ";
@@ -25,6 +26,7 @@ export default async function Home() {
       <PestsWeTreat />
       <Process />
       <Guarantee />
+      <OwnerStory />
       <LocalAbout />
       <Reviews />
       <Areas />
