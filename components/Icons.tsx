@@ -3,6 +3,11 @@ import type { ReactNode } from "react";
 type IconProps = { className?: string };
 
 const base = {
+  // Intrinsic size so the icon can't balloon when CSS is stripped
+  // (e.g. Microsoft Clarity heatmap replay). Tailwind h-*/w-* classes
+  // still override these on the live site.
+  width: 24,
+  height: 24,
   fill: "none",
   stroke: "currentColor",
   strokeWidth: 1.6,
@@ -79,7 +84,7 @@ export const Pin = ({ className }: IconProps) => (
 );
 
 export const Star = ({ className }: IconProps) => (
-  <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden>
+  <svg width={24} height={24} viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden>
     <path d="m12 2 2.9 6 6.6.6-5 4.3 1.5 6.5L12 16.9 5.9 19.4 7.4 13l-5-4.3L9 8z" />
   </svg>
 );
@@ -114,7 +119,7 @@ export const Tag = ({ className }: IconProps) => (
 
 // Brand logos (full color) for social & review links
 export const Instagram = ({ className }: IconProps) => (
-  <svg viewBox="0 0 24 24" className={className} aria-hidden>
+  <svg width={24} height={24} viewBox="0 0 24 24" className={className} aria-hidden>
     <defs>
       <linearGradient id="ig-gradient" x1="0" y1="1" x2="1" y2="0">
         <stop offset="0" stopColor="#feda75" />
@@ -129,13 +134,13 @@ export const Instagram = ({ className }: IconProps) => (
 );
 
 export const Facebook = ({ className }: IconProps) => (
-  <svg viewBox="0 0 24 24" className={className} aria-hidden>
+  <svg width={24} height={24} viewBox="0 0 24 24" className={className} aria-hidden>
     <path fill="#1877F2" d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.79-4.69 4.53-4.69 1.31 0 2.68.24 2.68.24v2.97h-1.5c-1.49 0-1.96.93-1.96 1.89v2.25h3.33l-.53 3.49h-2.8V24C19.61 23.1 24 18.1 24 12.07z" />
   </svg>
 );
 
 export const Google = ({ className }: IconProps) => (
-  <svg viewBox="0 0 48 48" className={className} aria-hidden>
+  <svg width={24} height={24} viewBox="0 0 48 48" className={className} aria-hidden>
     <path fill="#4285F4" d="M45.12 24.5c0-1.56-.14-3.06-.4-4.5H24v8.51h11.84c-.51 2.75-2.06 5.08-4.39 6.64v5.52h7.11c4.16-3.83 6.56-9.47 6.56-16.17z" />
     <path fill="#34A853" d="M24 46c5.94 0 10.92-1.97 14.56-5.33l-7.11-5.52c-1.97 1.32-4.49 2.1-7.45 2.1-5.73 0-10.58-3.87-12.31-9.07H4.34v5.7C7.96 41.07 15.4 46 24 46z" />
     <path fill="#FBBC05" d="M11.69 28.18C11.25 26.86 11 25.45 11 24s.25-2.86.69-4.18v-5.7H4.34C2.85 17.09 2 20.45 2 24s.85 6.91 2.34 9.88l7.35-5.7z" />
