@@ -473,7 +473,7 @@ Eco-friendly spider control offers a balanced solution that prioritizes both eff
     slug: "why-seasonal-pest-control-matters-in-semi-arid-climates",
     title: "Why Seasonal Pest Control Matters in Semi-Arid Climates",
     description:
-      "In semi-arid climates like northern Nevada, pests follow predictable seasonal patterns. Learn why seasonal pest control protects Reno and Sparks homes year-round.",
+      "In semi-arid climates, pests follow predictable seasonal patterns. Learn why seasonal pest control protects Reno and Sparks homes year-round.",
     excerpt:
       "Dry heat, cold snaps, and scarce water make pests highly opportunistic. Here's why seasonal pest control is the right strategy for a semi-arid climate.",
     date: "2026-04-03",
@@ -555,7 +555,7 @@ Semi-arid climates demand a proactive approach to pest management. Understanding
     slug: "why-you-should-schedule-a-pest-treatment-as-spring-comes",
     title: "Why You Should Schedule A Pest Treatment As Spring Comes",
     description:
-      "Spring is the strategic time to treat, before small pest activity becomes a full infestation. Learn why early spring pest treatment protects Reno and Sparks homes.",
+      "Spring is the time to treat, before small pest activity becomes a full infestation. Learn why early spring treatment protects Reno and Sparks homes.",
     excerpt:
       "Small spring activity turns into big summer problems fast. Here's why scheduling pest treatment as spring arrives stops infestations before they grow.",
     date: "2026-03-26",

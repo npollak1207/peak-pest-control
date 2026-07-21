@@ -14,7 +14,7 @@ import { posts, categories, formatDate, readingTime } from "@/lib/blog";
 export const metadata: Metadata = {
   title: "Pest Control Blog: Tips & Insights for Reno & Sparks",
   description:
-    "Expert pest control tips, seasonal guides, and prevention advice for homes and businesses across Reno, Sparks, and northern Nevada, from the Peak Pest Control team.",
+    "Expert pest control tips, seasonal guides, and prevention advice for homes and businesses across Reno, Sparks, and northern Nevada.",
   alternates: { canonical: "/blog" },
   openGraph: {
     title: "Pest Control Blog | Peak Pest Control",

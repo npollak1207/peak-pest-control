@@ -36,9 +36,12 @@ export const site = {
     "https://www.instagram.com/peakpestreno/",
     "https://www.facebook.com/peakpestreno",
   ],
-  // Paste the token from Google Search Console (URL-prefix property) here to
-  // verify ownership, e.g. "abc123...". Leave blank until you have it.
-  googleSiteVerification: "",
+  // Google Search Console ownership token (the value from the
+  // <meta name="google-site-verification" content="..."> tag). Set it in the
+  // env (NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION) — e.g. in Vercel — so it can
+  // change without a code edit; the hardcoded string is a fallback. Blank =
+  // no verification meta tag is rendered (see app/layout.tsx).
+  googleSiteVerification: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION ?? "",
 };
 
 export const nav = [

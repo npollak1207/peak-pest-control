@@ -335,7 +335,7 @@ If ant trails are appearing in your home this spring, a thorough inspection can 
     slug: "why-your-home-needs-a-year-round-pest-maintenance-plan",
     title: "Why Your Home Needs A Year-Round Pest Maintenance Plan",
     description:
-      "Pests don't take the winter off. Learn why a year-round pest maintenance plan protects Reno and Sparks homes across every season with proactive, scheduled service.",
+      "Pests don't take the winter off. Learn why a year-round pest maintenance plan protects Reno and Sparks homes every season.",
     excerpt:
       "Pests shift with the seasons, not away from your home. Here's why a scheduled, year-round maintenance plan beats reacting to each new sighting.",
     date: "2026-02-12",
@@ -444,7 +444,7 @@ Do not wait for pests to disrupt your home. A proactive plan offers consistent p
     slug: "post-winter-pest-prevention-checklist-for-reno-sparks-homeowners",
     title: "Post-Winter Pest Prevention Checklist For Reno/Sparks Homeowners",
     description:
-      "As winter ends, pests get moving. Use this post-winter pest prevention checklist to review exterior, interior, and landscaping risks around Reno and Sparks homes.",
+      "As winter ends, pests get moving. Use this post-winter checklist to review exterior, interior, and landscaping risks around Reno and Sparks homes.",
     excerpt:
       "Winter slows pests but rarely stops them. Here's a post-winter checklist for the exterior, interior, and yard conditions that let pests move in as spring nears.",
     date: "2026-02-06",
@@ -784,7 +784,7 @@ Preventing winter pest activity requires more than reacting once pests are alrea
     slug: "why-one-time-pest-treatments-rarely-solve-recurring-problems",
     title: "Why One-Time Pest Treatments Rarely Solve Recurring Problems",
     description:
-      "A single pest treatment reduces what you see but leaves the cause. Learn why one-time treatments fail and how ongoing care stops recurring pests in Reno and Sparks.",
+      "A single treatment cuts what you see but leaves the cause. Learn why one-time treatments fail and how ongoing care stops recurring pests in Reno and Sparks.",
     excerpt:
       "One-time service can quiet visible activity, then the pests return. Here's why recurring problems persist, and how ongoing care actually breaks the cycle.",
     date: "2026-01-09",

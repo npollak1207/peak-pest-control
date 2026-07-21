@@ -10,7 +10,7 @@ import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Contact Us",
-  description: `Get in touch with Peak Pest Control in Sparks, NV. Call ${site.phone}, email ${site.email}, or request a free estimate for pest control across Reno, Sparks, and northern Nevada.`,
+  description: `Contact Peak Pest Control in Sparks, NV. Call ${site.phone} or request a free estimate for pest control in Reno, Sparks, and northern Nevada.`,
   alternates: { canonical: "/contact" },
   openGraph: {
     title: "Contact Peak Pest Control | Reno & Sparks, NV",
