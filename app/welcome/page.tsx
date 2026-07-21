@@ -1,12 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import OwnerVideo from "@/components/OwnerVideo";
-import { Phone, Check } from "@/components/Icons";
+import { Check } from "@/components/Icons";
 import { site } from "@/lib/site";
 
-// Using the owner/about video for now. Swap to a dedicated welcome clip by
-// dropping it in at public/videos/welcome.mp4 and updating this path.
-const WELCOME_VIDEO_SRC = "/videos/owner-aspen.mp4";
+const WELCOME_VIDEO_SRC = "/videos/welcome.mp4";
 
 // Hidden onboarding page — link-only, kept out of search and the sitemap.
 export const metadata: Metadata = {
@@ -15,10 +13,27 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false, nocache: true },
 };
 
-const nextSteps = [
-  "Watch the welcome video from start to finish.",
-  "Save our main line so you can reach the office anytime.",
-  "Reply to your onboarding email once you're ready to get started.",
+// Onboarding checklist. Each step can carry an inline link (a phone number,
+// email, or the Google review page) rendered after its text.
+type NextStep = {
+  text: string;
+  link?: { label: string; href: string };
+};
+
+const nextSteps: NextStep[] = [
+  { text: "Watch the welcome video from start to finish." },
+  {
+    text: "Save our main line so you can reach the office anytime.",
+    link: { label: site.phone, href: site.phoneHref },
+  },
+  {
+    text: "Save our email for fast response to any questions!",
+    link: { label: site.email, href: `mailto:${site.email}` },
+  },
+  {
+    text: "Leave us a review if you're happy with your initial service!",
+    link: { label: "Leave a review", href: site.googleReviewUrl },
+  },
 ];
 
 export default function WelcomePage() {
@@ -42,9 +57,9 @@ export default function WelcomePage() {
       <div className="mx-auto mt-12 max-w-4xl px-5 sm:px-8">
         <OwnerVideo
           src={WELCOME_VIDEO_SRC}
-          webmSrc="/videos/owner-aspen.webm"
-          poster="/videos/owner-poster.jpg"
-          posterAlt="Aspen from Peak Pest Control"
+          webmSrc="/videos/welcome.webm"
+          poster="/videos/welcome-poster.jpg"
+          posterAlt="Welcome to Peak Pest Control"
           label="Welcome to Peak"
           playLabel="Play the welcome video"
           comingSoonLabel="Welcome video coming soon"
@@ -54,23 +69,29 @@ export default function WelcomePage() {
       <div className="mx-auto mt-14 max-w-2xl px-5 sm:px-8">
         <ul className="grid gap-4 text-left">
           {nextSteps.map((step) => (
-            <li key={step} className="flex items-start gap-3">
+            <li key={step.text} className="flex items-start gap-3">
               <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-mint-050 text-mint-600">
                 <Check className="h-3.5 w-3.5" />
               </span>
-              <span className="leading-relaxed text-white/80">{step}</span>
+              <span className="leading-relaxed text-white/80">
+                {step.text}
+                {step.link ? (
+                  <>
+                    {" "}
+                    <a
+                      href={step.link.href}
+                      className="font-bold text-mint underline decoration-mint/40 underline-offset-4 transition hover:decoration-mint"
+                    >
+                      {step.link.label}
+                    </a>
+                  </>
+                ) : null}
+              </span>
             </li>
           ))}
         </ul>
 
         <div className="mt-10 flex flex-col items-center gap-4 text-center">
-          <a
-            href={site.phoneHref}
-            className="inline-flex items-center gap-2 text-lg font-bold text-white transition hover:text-mint"
-          >
-            <Phone className="h-5 w-5 text-mint" />
-            {site.phone}
-          </a>
           <Link href="/" className="text-sm text-white/50 transition hover:text-mint">
             Explore peakpestreno.com
           </Link>
