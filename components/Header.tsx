@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { nav, site } from "@/lib/site";
-import { Phone } from "./Icons";
+import { ExternalLink, Phone, User } from "./Icons";
 import { openQuoteModal } from "./QuoteButton";
 
 export default function Header() {
@@ -45,7 +45,7 @@ export default function Header() {
           />
         </Link>
 
-        <nav className="hidden items-center gap-8 lg:flex">
+        <nav className="hidden items-center gap-6 lg:flex xl:gap-8">
           {nav.map((item) => (
             <a
               key={item.href}
@@ -57,13 +57,27 @@ export default function Header() {
           ))}
         </nav>
 
-        <div className="hidden items-center gap-5 lg:flex">
+        <div className="hidden items-center gap-4 lg:flex xl:gap-5">
           <a
             href={site.phoneHref}
             className="flex items-center gap-2 text-sm font-bold text-white transition hover:text-peak"
           >
             <Phone className="h-4 w-4 text-peak" />
             {site.phone}
+          </a>
+          {/* Existing customers: off-site account portal. Label shortens at lg
+              so the nav row still fits alongside the phone number. */}
+          <a
+            href={site.portalUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 rounded-full border border-white/25 px-4 py-2 text-sm font-bold text-white transition hover:border-peak hover:text-peak"
+          >
+            <User className="h-4 w-4 text-peak" />
+            <span>
+              <span className="hidden xl:inline">Customer </span>Portal
+            </span>
+            <ExternalLink className="h-3 w-3 text-white/40" />
           </a>
           <button
             type="button"
@@ -135,6 +149,18 @@ export default function Header() {
             >
               Get a Free Estimate
             </button>
+            {/* Existing customers: off-site account portal */}
+            <a
+              href={site.portalUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setOpen(false)}
+              className="flex items-center justify-center gap-2 rounded-full border border-white/25 px-5 py-3 text-base font-bold text-white"
+            >
+              <User className="h-5 w-5 text-peak" />
+              Customer Portal
+              <ExternalLink className="h-3.5 w-3.5 text-white/40" />
+            </a>
           </div>
         </nav>
       </div>

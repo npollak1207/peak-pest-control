@@ -95,6 +95,13 @@ export const User = ({ className }: IconProps) => (
   </svg>
 );
 
+export const ExternalLink = ({ className }: IconProps) => (
+  <svg {...base} className={className} aria-hidden>
+    <path d="M14 4h6v6M19.5 4.5 12 12" />
+    <path d="M18 14.5V18a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h3.5" />
+  </svg>
+);
+
 export const Calendar = ({ className }: IconProps) => (
   <svg {...base} className={className} aria-hidden>
     <rect x="4" y="5.5" width="16" height="15" rx="2" />

@@ -13,6 +13,9 @@ export const site = {
   address: "1455 Deming Way Unit #26, Sparks, NV 89431",
   hours: "Mon–Thu 8am–5pm · Fri 8am–12pm · Sat–Sun closed",
   url: "https://peakpestreno.com",
+  // Customer account portal (FieldPortals): invoices, payments, and upcoming
+  // visits. Lives off-site, so every link to it opens in a new tab.
+  portalUrl: "https://peakpestcontrol.fieldportals.com/landing/index",
   geo: { lat: 39.5497, lng: -119.7215 },
   // --- SEO / structured data ---
   priceRange: "$$",
