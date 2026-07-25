@@ -102,10 +102,16 @@ const orphanedPosts = [
   ["/most-common-kinds-of-rodents-in-nevada", "/pests/mice-and-rats"],
 ];
 
-// Google has the slash-terminated form of every one of these indexed. Next's
-// built-in trailing-slash redirect used to fire first, so every organic visit
-// cost two 308 round trips before the HTML started. Emitting both forms (with
-// skipTrailingSlashRedirect below) makes it a single hop.
+// Google has the slash-terminated form of every one of these indexed, which
+// costs an extra 308 before the HTML starts. Emitting both source forms (with
+// skipTrailingSlashRedirect below) collapses that to one hop when Next does
+// its own routing.
+//
+// NOTE: that does NOT happen on Vercel. Vercel's edge strips the trailing
+// slash before any of these rules are consulted, so production still serves
+// two hops for /old-url/ and the doubled sources never match. Verified after
+// deploy — kept because it is correct off-platform and harmless on it. The
+// remaining hop disappears on its own once Google recrawls to the new URLs.
 const legacyRedirects = [
   ...corePages,
   ...services,
@@ -123,7 +129,8 @@ const nextConfig = {
   // pin the workspace root so Next ignores the parent lockfile
   outputFileTracingRoot: __dirname,
   // we strip trailing slashes ourselves (last rule in redirects()) so the
-  // legacy map can match the slash form directly in one hop
+  // legacy map can match the slash form directly. No-op on Vercel — see the
+  // note above legacyRedirects.
   skipTrailingSlashRedirect: true,
   images: {
     // custom quality values used in the hero
