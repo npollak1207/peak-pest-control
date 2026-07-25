@@ -35,11 +35,13 @@ export default function Header() {
     >
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-5 sm:px-8">
         <Link href="/" aria-label="Peak Pest Control, home" className="flex items-center">
+          {/* renders at 110x40, so ask for 2x that and no more — the intrinsic
+              2560x930 file was being preloaded in full and stalling LCP */}
           <Image
             src="/peak-logo.png"
             alt="Peak Pest Control"
-            width={2560}
-            height={930}
+            width={220}
+            height={80}
             priority
             className="h-10 w-auto"
           />

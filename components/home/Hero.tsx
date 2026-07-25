@@ -52,6 +52,19 @@ const prefersReducedMotion = () =>
   typeof window !== "undefined" &&
   window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+// Next's image optimizer endpoint, called directly instead of via <Image>.
+// The poster needs art direction (portrait crop on phones, landscape above),
+// which next/image can't express — and it has to be in the server HTML so the
+// preload scanner finds it. `w` must be one of the configured deviceSizes.
+const opt = (src: string, w: number) =>
+  `/_next/image?url=${encodeURIComponent(src)}&w=${w}&q=75`;
+
+const srcset = (src: string, widths: number[]) =>
+  widths.map((w) => `${opt(src, w)} ${w}w`).join(", ");
+
+const MOBILE_POSTER = "/videos/hero-mobile-poster.jpg";
+const DESKTOP_POSTER = "/videos/hero-poster.jpg";
+
 // counts up from 0 to `to` once active
 function useCountUp(to: number, decimals: number, active: boolean) {
   const [value, setValue] = useState(active ? 0 : to);
@@ -172,8 +185,8 @@ export default function Hero({ rating }: { rating: Rating }) {
   // picked on the client so phones don't download the desktop clip.
   // null = poster only (Save-Data / reduced-motion skip the video).
   const [videoSrc, setVideoSrc] = useState<string | null>(null);
-  // portrait poster on phones, landscape otherwise
-  const [posterSrc, setPosterSrc] = useState("/videos/hero-poster.jpg");
+  // the video sits transparent over the poster until it has frames to show
+  const [videoReady, setVideoReady] = useState(false);
 
   // scroll parallax on the backdrop
   useEffect(() => {
@@ -196,7 +209,6 @@ export default function Hero({ rating }: { rating: Rating }) {
   // so metered connections only load the poster
   useEffect(() => {
     const isMobile = window.matchMedia("(max-width: 767px)").matches;
-    if (isMobile) setPosterSrc("/videos/hero-mobile-poster.jpg");
     if (prefersReducedMotion()) return;
     const nav = navigator as Navigator & { connection?: { saveData?: boolean } };
     if (nav.connection?.saveData) return;
@@ -222,8 +234,12 @@ export default function Hero({ rating }: { rating: Rating }) {
     <section className="relative flex min-h-[100svh] max-h-[100svh] items-center overflow-hidden bg-ink text-white sm:max-h-none">
       {/* phones cap the section to one viewport so the bottom-pinned ticker
           sits on the fold; cap lifts at sm+ */}
-      {/* full-bleed hero video (parallax + slow zoom). poster paints right
-          away so there's no black box while it loads */}
+      {/* full-bleed hero video (parallax + slow zoom), layered over the poster.
+          The poster is its own <picture> rather than the video's `poster`
+          attribute: that way it's optimized (AVIF), sized to the device, and
+          in the server HTML — the old attribute shipped the raw 195KB desktop
+          JPEG to phones and only swapped to the portrait one after hydration,
+          which put LCP behind the JS bundle. */}
       <div ref={imageRef} className="absolute inset-0 z-0 will-change-transform">
         <video
           ref={videoRef}
@@ -232,11 +248,34 @@ export default function Hero({ rating }: { rating: Rating }) {
           loop
           playsInline
           preload="none"
-          poster={posterSrc}
           src={videoSrc ?? undefined}
-          className="h-full w-full object-cover"
+          onPlaying={() => setVideoReady(true)}
+          className="absolute inset-0 h-full w-full object-cover"
           style={{ objectPosition: "50% 50%" }}
         />
+        {/* Poster sits ON TOP of the video and fades out once it plays. The
+            other way round doesn't work: a <video> keeps painting its own
+            (black) box over anything beneath it even at opacity 0. */}
+        <picture>
+          <source
+            media="(max-width: 767px)"
+            srcSet={srcset(MOBILE_POSTER, [640, 828, 1080])}
+            sizes="100vw"
+          />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={opt(DESKTOP_POSTER, 1920)}
+            srcSet={srcset(DESKTOP_POSTER, [1080, 1920, 2048])}
+            sizes="100vw"
+            alt=""
+            fetchPriority="high"
+            decoding="async"
+            className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${
+              videoReady ? "opacity-0" : "opacity-100"
+            }`}
+            style={{ objectPosition: "50% 50%" }}
+          />
+        </picture>
       </div>
 
       {/* Overlays: readability gradients, ridge lines, vignette, film grain */}

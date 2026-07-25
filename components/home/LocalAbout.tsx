@@ -20,6 +20,8 @@ export default function LocalAbout() {
               alt="The Peak Pest Control team in front of the company fleet"
               width={1619}
               height={1080}
+              // without `sizes` a 2x phone pulls the 3840px variant (~190KB)
+              sizes="(min-width: 1024px) 592px, 100vw"
               className="h-full w-full object-cover"
             />
           </div>
@@ -30,6 +32,7 @@ export default function LocalAbout() {
               alt="The Peak Pest Control team at a training session"
               width={520}
               height={340}
+              sizes="(min-width: 1024px) 208px, 176px"
               className="h-full w-full object-cover"
             />
           </div>

@@ -19,8 +19,8 @@ export default function Footer() {
               <Image
                 src="/peak-logo.png"
                 alt="Peak Pest Control"
-                width={2560}
-                height={930}
+                width={264}
+                height={96}
                 className="h-12 w-auto"
               />
             </Link>

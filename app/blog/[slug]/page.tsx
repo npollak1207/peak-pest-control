@@ -148,11 +148,13 @@ export default async function BlogPostPage({
         <div className="mx-auto max-w-3xl px-5 sm:px-8">
           {/* Featured image */}
           <div className="relative aspect-[16/9] overflow-hidden rounded-3xl border border-line shadow-soft">
+            {/* deliberately lazy — the hero pushes this ~1100px down on phones,
+                and `priority` (or even `eager`, which still emits a preload)
+                had it competing with the <h1> font that decides LCP here */}
             <Image
               src={post.image}
               alt={post.imageAlt}
               fill
-              priority
               sizes="(max-width: 768px) 100vw, 768px"
               className="object-cover"
             />

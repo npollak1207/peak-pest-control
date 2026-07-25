@@ -85,18 +85,46 @@ const migratedPosts = [
   "how-the-chilly-fall-season-can-influence-ant-behavior",
 ];
 
+// Posts that ranked on the old site but were never migrated — they were
+// 404ing. Point each at the closest field-guide page so the traffic and link
+// equity land somewhere relevant instead of on an error page.
+// TODO: these rank better as real articles; the originals can be pulled from
+// the Wayback Machine and republished under /blog, then remapped above.
+const orphanedPosts = [
+  ["/do-spiders-like-cold-or-warm-weather", "/pests/spiders"],
+  ["/where-spiders-go-when-it-rains", "/pests/spiders"],
+  ["/what-are-the-most-common-spiders-in-nevada-and-are-they-dangerous", "/pests/spiders"],
+  ["/spotting-dangerous-spiders-in-nevada-a-homeowners-guide", "/pests/spiders"],
+  ["/why-spider-webs-can-cause-an-itch", "/pests/spiders"],
+  ["/what-attracts-wolf-spiders-to-your-home", "/pests/wolf-spiders"],
+  ["/hornets-101-understanding-these-stinging-insects-and-their-night-time-behavior", "/pests/wasps-and-hornets"],
+  ["/are-gall-wasps-dangerous-to-humans", "/pests/wasps-and-hornets"],
+  ["/most-common-kinds-of-rodents-in-nevada", "/pests/mice-and-rats"],
+];
+
+// Google has the slash-terminated form of every one of these indexed. Next's
+// built-in trailing-slash redirect used to fire first, so every organic visit
+// cost two 308 round trips before the HTML started. Emitting both forms (with
+// skipTrailingSlashRedirect below) makes it a single hop.
 const legacyRedirects = [
   ...corePages,
   ...services,
   ...areas,
+  ...orphanedPosts,
   ...migratedPosts.map((slug) => [`/${slug}`, `/blog/${slug}`]),
-].map(([source, destination]) => ({ source, destination, permanent: true }));
+].flatMap(([source, destination]) => [
+  { source, destination, permanent: true },
+  { source: `${source}/`, destination, permanent: true },
+]);
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
   // pin the workspace root so Next ignores the parent lockfile
   outputFileTracingRoot: __dirname,
+  // we strip trailing slashes ourselves (last rule in redirects()) so the
+  // legacy map can match the slash form directly in one hop
+  skipTrailingSlashRedirect: true,
   images: {
     // custom quality values used in the hero
     qualities: [75, 90, 95],
@@ -110,6 +138,9 @@ const nextConfig = {
       ...legacyRedirects,
       // old blog category archives fold into the single blog index
       { source: "/category/:slug*", destination: "/blog", permanent: true },
+      // catch-all trailing-slash strip, replacing the built-in one we disabled.
+      // Must stay last so the legacy map above gets first refusal.
+      { source: "/:path+/", destination: "/:path+", permanent: true },
     ];
   },
 };
